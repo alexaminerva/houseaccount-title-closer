@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Move-In Hub | HouseAccount</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-698D2S65FN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date()); gtag('config', 'G-698D2S65FN');
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #133C55; --navy-d: #0e2d40;
+  --blue: #6B9AB8; --blue-d: #4f7d9c;
+  --gold: #F5A623; --gold-d: #d98d10;
+  --cream: #F2F5F7; --white: #ffffff;
+  --text: #133C55; --muted: #6b8699;
+  --border: #dce5ec; --green: #12b76a;
+  --green-bg: #e6faf2; --red: #e53e3e;
+}
+html { scroll-behavior: smooth; }
+body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--cream); color: var(--text); margin: 0; }
+
+/* ── NAV ── */
+.nav { background: var(--navy); padding: 16px 32px; display: flex; align-items: center; justify-content: center; gap: 16px; min-height: 60px; }
+.nav-partner { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); letter-spacing: 0.03em; }
+.nav-x { color: rgba(255,255,255,0.25); font-size: 14px; font-weight: 300; }
+.nav img { height: 24px; }
+
+/* ── HERO ── */
+.hero { background: var(--navy); padding: 64px 24px 88px; text-align: center; position: relative; overflow: hidden; }
+.hero::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 60px; background: var(--cream); clip-path: ellipse(55% 100% at 50% 100%); }
+.hero-eyebrow { display: inline-block; background: rgba(107,154,184,0.18); border: 1px solid rgba(107,154,184,0.35); color: var(--blue); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 18px; border-radius: 100px; margin-bottom: 22px; }
+.hero h1 { font-size: clamp(28px, 5vw, 50px); font-weight: 700; color: var(--white); line-height: 1.12; max-width: 640px; margin: 0 auto 16px; letter-spacing: -0.025em; }
+.hero h1 .accent { color: var(--gold); }
+.hero-sub { font-size: 16px; color: rgba(255,255,255,0.58); max-width: 520px; margin: 0 auto; line-height: 1.65; }
+
+/* ── PROGRESS STRIP ── */
+.progress-strip { background: var(--white); border-bottom: 1px solid var(--border); padding: 14px 24px; }
+.progress-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+.progress-label { font-size: 13px; font-weight: 600; color: var(--navy); white-space: nowrap; min-width: 160px; }
+.progress-bar-wrap { flex: 1; height: 6px; background: var(--cream); border-radius: 3px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--green); border-radius: 3px; width: 0%; transition: width 0.4s ease; }
+.progress-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+/* ── SHARED SECTION STYLES ── */
+.section { padding: 64px 24px; }
+.section-white { background: var(--white); }
+.section-inner { max-width: 900px; margin: 0 auto; }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+.section-title { font-size: clamp(20px, 3.5vw, 30px); font-weight: 700; color: var(--navy); letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 6px; }
+.section-sub { font-size: 15px; color: var(--muted); line-height: 1.65; margin-bottom: 32px; max-width: 580px; }
+
+/* ── MAIL FORWARDING CARD ── */
+.mail-card { background: var(--navy); border-radius: 20px; padding: 32px 36px; display: flex; align-items: center; gap: 28px; max-width: 780px; }
+.mail-icon { width: 60px; height: 60px; background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.3); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.mail-icon svg { width: 28px; height: 28px; stroke: var(--gold); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.mail-body { flex: 1; }
+.mail-body h3 { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 5px; }
+.mail-body p { font-size: 13px; color: rgba(255,255,255,0.52); line-height: 1.6; }
+.mail-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
+.btn-gold { display: inline-flex; align-items: center; gap: 7px; background: var(--gold); color: var(--navy); font-size: 14px; font-weight: 700; padding: 12px 22px; border-radius: 10px; text-decoration: none; border: none; font-family: inherit; cursor: pointer; transition: background 0.15s, transform 0.1s; white-space: nowrap; }
+.btn-gold:hover { background: var(--gold-d); transform: translateY(-1px); }
+.btn-gold svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.mail-done-btn { display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid rgba(18,183,106,0.35); color: rgba(18,183,106,0.8); font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap; }
+.mail-done-btn:hover { background: rgba(18,183,106,0.1); }
+.mail-done-btn.marked { background: rgba(18,183,106,0.15); border-color: var(--green); color: var(--green); }
+
+/* ── CHECKLIST GRID ── */
+.checklist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 13px; }
+.check-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; cursor: pointer; transition: border-color 0.15s, background 0.15s; user-select: none; }
+.check-card:hover { border-color: var(--blue); }
+.check-card.done { border-color: var(--green); background: #f0fdf7; }
+.check-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.check-card-left { display: flex; align-items: center; gap: 12px; }
+.check-emoji { font-size: 22px; line-height: 1; }
+.check-name { font-size: 14px; font-weight: 600; color: var(--navy); }
+.check-card.done .check-name { text-decoration: line-through; text-decoration-color: #12b76a60; color: #1a7a4e; }
+.check-circle { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+.check-card.done .check-circle { background: var(--green); border-color: var(--green); }
+.check-circle-inner { width: 8px; height: 8px; border-radius: 50%; background: var(--border); opacity: 0; transition: opacity 0.15s; }
+.check-card.done .check-circle-inner { opacity: 0; }
+.check-circle svg { width: 11px; height: 11px; stroke: white; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; display: none; }
+.check-card.done .check-circle svg { display: block; }
+.check-desc { font-size: 12px; color: var(--muted); line-height: 1.55; margin-bottom: 12px; }
+.check-footer { display: flex; align-items: center; justify-content: space-between; }
+.check-time { font-size: 11px; color: #a0b3bf; font-weight: 500; }
+.check-link { font-size: 12px; font-weight: 600; color: var(--blue); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+.check-link:hover { color: var(--navy); }
+.check-link svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.check-note { font-size: 11px; color: #a0b3bf; font-style: italic; }
+
+/* ── UTILITY SECTION ── */
+.utility-city-row { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.utility-city-row label { font-size: 13px; font-weight: 600; color: var(--navy); white-space: nowrap; }
+.utility-city-input { padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; color: var(--text); background: var(--white); outline: none; transition: border-color 0.15s; width: 220px; }
+.utility-city-input:focus { border-color: var(--blue); }
+.utility-city-input::placeholder { color: #a0b3bf; }
+.utility-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.utility-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+.utility-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.utility-emoji { font-size: 24px; line-height: 1; }
+.utility-card h4 { font-size: 14px; font-weight: 700; color: var(--navy); }
+.utility-card .utility-sub { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+.provider-list { display: flex; flex-direction: column; gap: 6px; }
+.provider-link { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; background: var(--cream); border-radius: 8px; font-size: 12px; font-weight: 500; color: var(--navy); text-decoration: none; transition: background 0.1s; }
+.provider-link:hover { background: var(--border); }
+.provider-link svg { width: 11px; height: 11px; stroke: var(--muted); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.local-search-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; color: var(--blue); font-weight: 600; text-decoration: none; cursor: pointer; border: none; background: none; font-family: inherit; padding: 0; transition: color 0.1s; }
+.local-search-btn:hover { color: var(--navy); }
+.local-search-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── SERVICES SECTION ── */
+.services-featured { background: rgba(245,166,35,0.07); border: 1.5px solid rgba(245,166,35,0.35); border-radius: 18px; padding: 26px 30px; display: flex; align-items: center; gap: 22px; margin-bottom: 18px; }
+.services-featured-icon { width: 52px; height: 52px; background: var(--gold); border-radius: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.services-featured-icon svg { width: 24px; height: 24px; stroke: var(--navy); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.services-featured-body { flex: 1; }
+.featured-badge { display: inline-block; background: var(--gold); color: var(--navy); font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 6px; }
+.services-featured h3 { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.services-featured p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 13px; }
+.service-tile { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 18px; display: flex; align-items: flex-start; gap: 13px; }
+.service-tile-emoji { font-size: 22px; line-height: 1; margin-top: 1px; }
+.service-tile h4 { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 3px; }
+.service-tile p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.services-cta-wrap { text-align: center; margin-top: 28px; }
+.services-cta-wrap p { font-size: 14px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+.btn-navy { display: inline-flex; align-items: center; gap: 8px; background: var(--navy); color: var(--white); font-size: 15px; font-weight: 600; padding: 14px 32px; border-radius: 11px; text-decoration: none; border: none; font-family: inherit; cursor: pointer; transition: background 0.15s; }
+.btn-navy:hover { background: var(--navy-d); }
+
+/* ── CLAIM FORM ── */
+.form-card { background: var(--white); border-radius: 20px; padding: 44px 40px; border: 1px solid var(--border); max-width: 580px; margin: 0 auto; }
+.form-title { font-size: 21px; font-weight: 700; color: var(--navy); margin-bottom: 4px; letter-spacing: -0.02em; }
+.form-sub { font-size: 14px; color: var(--muted); margin-bottom: 26px; line-height: 1.55; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy); margin-bottom: 7px; }
+.form-group input { width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: inherit; color: var(--text); background: var(--cream); outline: none; transition: border-color 0.15s; }
+.form-group input:focus { border-color: var(--blue); background: var(--white); }
+.form-group input.error { border-color: var(--red); }
+.form-group input::placeholder { color: #b0b8cc; }
+.divider-label { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 4px 0 15px; }
+.divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.interest-label { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy); margin-bottom: 10px; display: block; }
+.interest-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.15s; user-select: none; background: var(--cream); }
+.chip.on { border-color: var(--blue); background: rgba(107,154,184,0.12); color: var(--navy); }
+.submit-btn { width: 100%; background: var(--navy); color: var(--white); border: none; border-radius: 10px; padding: 15px; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.15s; }
+.submit-btn:hover { background: var(--navy-d); }
+.fine-print { font-size: 11px; color: var(--muted); text-align: center; margin-top: 12px; line-height: 1.6; }
+.success-state { display: none; text-align: center; padding: 10px 0; }
+.success-icon { width: 56px; height: 56px; background: var(--green-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+.success-icon svg { width: 24px; height: 24px; stroke: var(--green); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.success-state h3 { font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.success-state p { font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 360px; margin: 0 auto; }
+
+/* ── FOOTER ── */
+.footer { background: var(--navy); padding: 32px 24px; text-align: center; }
+.footer-logos { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 12px; }
+.footer-partner-text { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); }
+.footer-x { font-size: 13px; color: rgba(255,255,255,0.2); }
+.footer img { height: 20px; opacity: 0.65; }
+.footer p { font-size: 12px; color: rgba(255,255,255,0.3); margin-bottom: 5px; }
+.footer a { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 12px; margin: 0 8px; }
+.footer a:hover { color: rgba(255,255,255,0.6); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .nav { padding: 14px 20px; gap: 10px; }
+  .hero { padding: 48px 20px 72px; }
+  .section { padding: 48px 20px; }
+  .mail-card { flex-direction: column; padding: 24px 22px; gap: 18px; }
+  .mail-actions { flex-direction: row; align-items: center; width: 100%; }
+  .checklist-grid, .utility-grid, .services-grid { grid-template-columns: 1fr; }
+  .services-featured { flex-direction: column; gap: 16px; }
+  .btn-gold { width: 100%; justify-content: center; }
+  .form-card { padding: 28px 20px; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .utility-city-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .utility-city-input { width: 100%; }
+  .progress-inner { flex-wrap: wrap; gap: 8px; }
+  .progress-label { min-width: unset; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <span class="nav-partner" id="nav-partner" style="display:none"></span>
+  <span class="nav-x" id="nav-x" style="display:none">×</span>
+  <a href="https://www.houseaccount.com/" target="_blank">
+    <img src="https://cdn.prod.website-files.com/67c69ed7dd5666816747acc4/691e951396c94a7fdce7018b_HouseAccount%20Logoo.svg" alt="HouseAccount">
+  </a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow" id="hero-eyebrow">Your move-in hub, powered by HouseAccount</div>
+  <h1>Everything you need<br>to <span class="accent">settle in</span>, all in one place.</h1>
+  <p class="hero-sub">Forward your mail, update your address, set up utilities, and book your first home services — we've organized it all for you.</p>
+</section>
+
+<!-- PROGRESS STRIP -->
+<div class="progress-strip">
+  <div class="progress-inner">
+    <span class="progress-label" id="progress-label">Your move-in checklist</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+    <span class="progress-count" id="progress-count">0 of 10 done</span>
+  </div>
+</div>
+
+<!-- SECTION: MAIL FORWARDING -->
+<section class="section section-white" id="mail">
+  <div class="section-inner">
+    <div class="eyebrow">Step 1 — Do this first</div>
+    <h2 class="section-title">Forward your mail</h2>
+    <p class="section-sub">The single most important task after moving. USPS mail forwarding ensures nothing gets lost during your transition — takes 5 minutes online.</p>
+    <div class="mail-card">
+      <div class="mail-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </div>
+      <div class="mail-body">
+        <h3>USPS Mail Forwarding</h3>
+        <p>Start a change of address request at USPS.com — mail from your old address will forward automatically for up to 12 months.</p>
+      </div>
+      <div class="mail-actions">
+        <a class="btn-gold" href="https://moversguide.usps.com/" target="_blank" rel="noopener">
+          Start forwarding
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <button class="mail-done-btn" id="mail-done-btn" data-task="usps" onclick="toggleMailDone()">
+          Mark as done
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: ADDRESS CHECKLIST -->
+<section class="section" id="addresses">
+  <div class="section-inner">
+    <div class="eyebrow">Step 2 — Update your address</div>
+    <h2 class="section-title">9 places you need to update</h2>
+    <p class="section-sub">Check each one off as you go — your progress saves automatically.</p>
+    <div class="checklist-grid">
+
+      <div class="check-card" data-idx="0">
+        <div class="check-card-top">
+          <div class="check-card-left">
+            <span class="check-emoji">🪪</span>
+            <span class="check-name">Driver's License &amp; DMV</span>
+          </div>
+          <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <p class="check-desc">Update your address at the DMV — required within 30 days in most states. Also update your vehicle registration.</p>
+        <div class="check-footer">
+          <span class="check-time">~15 min</span>
+          <a class="check-link" href="https://www.dmv.org/change-of-address.php" target="_blank" rel="noopener" onclick="event.stopPropagation()">Go <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+      </div>
+
+      <div class="check-card" data-idx="1">
+        <div class="check-card-top">
+          <div class="check-card-left">
+            <span class="check-emoji">🗳️</span>
+            <span class="check-name">Voter Registration</span>
+          </div>
+          <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <p class="check-desc">Stay registered to vote at your new address. Takes 3 minutes online and can be done before your next election.</p>
+        <div class="check-footer">
+          <span class="check-time">~3 min</span>
+          <a class="check-link" href="https://vote.org/change-of-address/" target="_blank" rel="noopener" onclick="event.stopPropagation()">Go <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+      </div>
+
+      <div class="check-card" data-idx="2">
+        <div class="check-card-top">
+          <div class="check-card-left">
+            <span class="check-emoji">🏛️</span>
+            <span class="check-name">IRS &amp; Federal Taxes</span>
+          </div>
+          <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <p class="check-desc">File IRS Form 8822 to update your address for tax refunds and notices. Also update your state tax agency.</p>
+        <div class="check-footer">
+          <span class="check-time">~10 min</span>
+          <a class="check-link" href="https://www.irs.gov/filing/change-of-address" target="_blank" rel="noopener" onclick="event.stopPropagation()">Go <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+      </div>
+
+      <div class="check-card" data-idx="3">
+        <div class="check-card-top">
+          <div class="check-card-left">
+            <span class="check-emoji">🏦</span>
+            <span class="check-name">Banks &amp; Credit Cards</span>
+          </div>
+          <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <p class="check-desc">Log in to each bank and credit card account and update your mailing address so statements reach you.</p>
+        <div class="check-footer">
+          <span class="check-time">~20 min</span>
+          <span class="check-note">Log in to each bank</span>
+        </div>
+      </div>
+
+      <div class="check-card" data-idx="4">
+        <div class="check-card-top">
+          <div class="check-card-left">
+            <span class="check-emoji">💊</span>
+            <span class="check-name">Social Security</span>
+          </div>
+          <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <p class="check-desc">Update your address with the Social Security Administration via your My Social Security account online.</p>
+        <div class="check-footer">
+          <span class="check-time">~5 min</span>
+          <a class="check-link" href="https://www.ssa.gov/myaccount/" target="_blank" rel="noopener" onclick="event.stopPropagation()">Go <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+      </div>
+
+      <div class="check-card" data-idx="5">
+        <div class="check-card-top">
+          <div class="check-card-left">
+            <span class="check-emoji">📦</span>
+            <span class="check-name">Amazon &amp; Online Shopping</span>
+          </div>
+          <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <p class="check-desc">Update your default shipping address on Amazon, and any other retailers where you have a saved address.</p>
+        <div class="check-footer">
+          <span class="check-time">~10 min</span>
+          <a class="check-link" href="https://www.amazon.com/gp/css/account/address/view.html" target="_blank" rel="noopener" onclick="event.stopPropagation()">Amazon <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+      </div>
+
+      <div class="check-card" data-idx="6">
+        <div class="check-card-top">
+          <div class="check-card-left">
+            <span class="check-emoji">🛡️</span>
+            <span class="check-name">Insurance Policies</span>
+          </div>
+          <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <p class="check-desc">Contact your auto, health, and life insurance providers. Address changes can affect premiums — especially auto.</p>
+        <div class="check-footer">
+          <span class="check-time">~20 min</span>
+          <span class="check-note">Call or log in to each</span>
+        </div>
+      </div>
+
+      <div class="check-card" data-idx="7">
+        <div class="check-card-top">
+          <div class="check-card-left">
+            <span class="check-emoji">👔</span>
+            <span class="check-name">Employer / HR</span>
+          </div>
+          <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <p class="check-desc">Update your address in your company's HR system so your W-2, pay stubs, and benefits mail reach your new home.</p>
+        <div class="check-footer">
+          <span class="check-time">~5 min</span>
+          <span class="check-note">Update in HR portal</span>
+        </div>
+      </div>
+
+      <div class="check-card" data-idx="8">
+        <div class="check-card-top">
+          <div class="check-card-left">
+            <span class="check-emoji">🩺</span>
+            <span class="check-name">Doctors &amp; Pharmacy</span>
+          </div>
+          <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <p class="check-desc">Call your primary care doctor, dentist, specialists, and pharmacy to update your address and transfer prescriptions if needed.</p>
+        <div class="check-footer">
+          <span class="check-time">~15 min</span>
+          <span class="check-note">Call each provider</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: UTILITY SETUP -->
+<section class="section section-white" id="utilities">
+  <div class="section-inner">
+    <div class="eyebrow">Step 3 — Set up utilities</div>
+    <h2 class="section-title">Get the lights on</h2>
+    <p class="section-sub">Enter your city and we'll help you find the right providers. Click "Search local" to find options in your area.</p>
+    <div class="utility-city-row">
+      <label for="utility-city">Your city:</label>
+      <input type="text" id="utility-city" class="utility-city-input" placeholder="Miami, Orlando, Tampa…">
+    </div>
+    <div class="utility-grid">
+
+      <div class="utility-card">
+        <div class="utility-header">
+          <span class="utility-emoji">⚡</span>
+          <h4>Electric</h4>
+        </div>
+        <p class="utility-sub">Major providers in Florida — select yours or search local.</p>
+        <div class="provider-list">
+          <a class="provider-link" href="https://www.fpl.com/start-service.html" target="_blank" rel="noopener">Florida Power &amp; Light (FPL) <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <a class="provider-link" href="https://www.duke-energy.com/home/start-stop-move" target="_blank" rel="noopener">Duke Energy <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <a class="provider-link" href="https://www.teco.net/customer-service/start-stop-or-transfer-service/" target="_blank" rel="noopener">TECO / Peoples Gas <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+        <a class="local-search-btn" id="search-electric" href="https://www.google.com/search?q=electric+utility+near+me" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Search local providers
+        </a>
+      </div>
+
+      <div class="utility-card">
+        <div class="utility-header">
+          <span class="utility-emoji">🔥</span>
+          <h4>Natural Gas</h4>
+        </div>
+        <p class="utility-sub">Set up gas service before your first cold night or if you have a gas stove or dryer.</p>
+        <div class="provider-list">
+          <a class="provider-link" href="https://www.peoplesgas.com/service-requests/start-service" target="_blank" rel="noopener">Peoples Gas (FL) <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <a class="provider-link" href="https://www.floridacitygas.com/start-service" target="_blank" rel="noopener">Florida City Gas <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+        <a class="local-search-btn" id="search-gas" href="https://www.google.com/search?q=natural+gas+utility+near+me" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Search local providers
+        </a>
+      </div>
+
+      <div class="utility-card">
+        <div class="utility-header">
+          <span class="utility-emoji">📶</span>
+          <h4>Internet &amp; Cable</h4>
+        </div>
+        <p class="utility-sub">Schedule installation before move-in day — availability slots fill up fast in new areas.</p>
+        <div class="provider-list">
+          <a class="provider-link" href="https://www.xfinity.com/learn/offers" target="_blank" rel="noopener">Xfinity / Comcast <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <a class="provider-link" href="https://www.att.com/internet/" target="_blank" rel="noopener">AT&amp;T Internet <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <a class="provider-link" href="https://www.spectrum.com/internet" target="_blank" rel="noopener">Spectrum <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+        <a class="local-search-btn" id="search-internet" href="https://www.google.com/search?q=internet+providers+near+me" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Search local providers
+        </a>
+      </div>
+
+      <div class="utility-card">
+        <div class="utility-header">
+          <span class="utility-emoji">💧</span>
+          <h4>Water &amp; Sewer</h4>
+        </div>
+        <p class="utility-sub">Water is managed by your county or city municipality. Search below to find your local authority.</p>
+        <div class="provider-list">
+          <a class="provider-link" href="https://www.miami-dadewaterservices.org/" target="_blank" rel="noopener">Miami-Dade Water <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <a class="provider-link" href="https://www.ouc.com/residential/start-stop-or-transfer-service" target="_blank" rel="noopener">OUC (Orlando) <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+        <a class="local-search-btn" id="search-water" href="https://www.google.com/search?q=water+utility+service+near+me" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Search local authority
+        </a>
+      </div>
+
+      <div class="utility-card">
+        <div class="utility-header">
+          <span class="utility-emoji">🗑️</span>
+          <h4>Trash &amp; Recycling</h4>
+        </div>
+        <p class="utility-sub">Trash pickup is typically set up through your city or county. Some HOAs include it — check first.</p>
+        <div class="provider-list">
+          <a class="provider-link" href="https://www.wm.com/en/us/my-account/start-service" target="_blank" rel="noopener">Waste Management <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <a class="provider-link" href="https://www.republicservices.com/resident" target="_blank" rel="noopener">Republic Services <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+        <a class="local-search-btn" id="search-trash" href="https://www.google.com/search?q=trash+pickup+service+near+me" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Search local service
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: HOME SERVICES -->
+<section class="section" id="services">
+  <div class="section-inner">
+    <div class="eyebrow">Step 4 — Home services</div>
+    <h2 class="section-title">Your first home setup, handled</h2>
+    <p class="section-sub">HouseAccount connects you with vetted, insured pros — and a real concierge who coordinates everything so you don't have to.</p>
+
+    <div class="services-featured">
+      <div class="services-featured-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="13" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="16" x2="12" y2="21"/></svg>
+      </div>
+      <div class="services-featured-body">
+        <div class="featured-badge">Closing gift — compliments of your agent</div>
+        <h3>Buy 1 TV mount, get 1 free</h3>
+        <p>Professional installation on both. Claim below — your concierge will schedule everything around your move-in date.</p>
+      </div>
+      <div style="flex-shrink:0">
+        <a class="btn-gold" href="#claim">Claim free mount</a>
+      </div>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-tile">
+        <span class="service-tile-emoji">🧹</span>
+        <div>
+          <h4>Move-In Clean</h4>
+          <p>Deep clean before you unpack — every surface, every corner.</p>
+        </div>
+      </div>
+      <div class="service-tile">
+        <span class="service-tile-emoji">🔒</span>
+        <div>
+          <h4>Lock Change</h4>
+          <p>Peace of mind from day one. New locks on every door.</p>
+        </div>
+      </div>
+      <div class="service-tile">
+        <span class="service-tile-emoji">🏊</span>
+        <div>
+          <h4>Pool Maintenance</h4>
+          <p>Balanced, clean, and swim-ready from move-in day forward.</p>
+        </div>
+      </div>
+      <div class="service-tile">
+        <span class="service-tile-emoji">💡</span>
+        <div>
+          <h4>Fixture Installation</h4>
+          <p>Light fixtures, ceiling fans, smart switches — installed right.</p>
+        </div>
+      </div>
+      <div class="service-tile">
+        <span class="service-tile-emoji">🪞</span>
+        <div>
+          <h4>Mirror &amp; Art Hanging</h4>
+          <p>Level, anchored, and perfectly placed on any wall type.</p>
+        </div>
+      </div>
+      <div class="service-tile">
+        <span class="service-tile-emoji">🌿</span>
+        <div>
+          <h4>Lawn &amp; Landscaping</h4>
+          <p>Weekly mowing, trimming, and seasonal cleanup — set it and forget it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="services-cta-wrap">
+      <p>Not sure what you need? Your HouseAccount concierge will walk through it with you.</p>
+      <a class="btn-navy" href="#claim">Connect with my concierge →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: CLAIM FORM -->
+<section class="section section-white" id="claim">
+  <div class="section-inner">
+    <div style="text-align:center; margin-bottom:32px;">
+      <div class="eyebrow">Get started</div>
+      <h2 class="section-title">Claim your free TV mount</h2>
+    </div>
+    <div class="form-card">
+      <div id="form-content">
+        <p class="form-title">Your information</p>
+        <p class="form-sub">Fill this in and a HouseAccount concierge will reach out within 24 hours to confirm your TV mount and schedule your install.</p>
+
+        <form id="claim-form" name="closer-lead" data-netlify="true">
+          <input type="hidden" name="form-name" value="closer-lead">
+          <input type="hidden" name="partner" id="form-partner" value="direct">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>First name</label>
+              <input type="text" name="first-name" id="form-first" placeholder="Jane" required>
+            </div>
+            <div class="form-group">
+              <label>Last name</label>
+              <input type="text" name="last-name" id="form-last" placeholder="Smith" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" id="form-email" placeholder="jane@email.com" required>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" name="phone" id="form-phone" placeholder="(555) 000-0000" required>
+          </div>
+
+          <div class="divider-label">New home address</div>
+          <div class="form-group">
+            <label>Street address</label>
+            <input type="text" name="street" id="form-street" placeholder="123 Palm Ave" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" name="city" id="form-city" placeholder="Miami" required>
+            </div>
+            <div class="form-group">
+              <label>State</label>
+              <input type="text" name="state" id="form-state" placeholder="FL" maxlength="2" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Zip</label>
+            <input type="text" name="zip" id="form-zip" placeholder="33101" maxlength="10" required>
+          </div>
+
+          <div class="divider-label">I'm also interested in</div>
+          <span class="interest-label" style="display:none"></span>
+          <div class="interest-chips">
+            <label class="chip" data-label="Move-In Clean"><input type="checkbox" name="interest" value="Move-In Clean"> 🧹 Move-In Clean</label>
+            <label class="chip" data-label="Lock Change"><input type="checkbox" name="interest" value="Lock Change"> 🔒 Lock Change</label>
+            <label class="chip" data-label="Pool Maintenance"><input type="checkbox" name="interest" value="Pool Maintenance"> 🏊 Pool Maintenance</label>
+            <label class="chip" data-label="Fixtures"><input type="checkbox" name="interest" value="Fixtures"> 💡 Fixtures</label>
+            <label class="chip" data-label="Lawn Care"><input type="checkbox" name="interest" value="Lawn Care"> 🌿 Lawn Care</label>
+          </div>
+
+          <button type="button" class="submit-btn" id="form-submit-btn" onclick="handleFormSubmit()">
+            Unlock my free TV mount
+          </button>
+          <p class="fine-print">By submitting you agree to be contacted by a HouseAccount concierge. No spam, ever.</p>
+        </form>
+      </div>
+
+      <div class="success-state" id="form-success">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3>You're all set!</h3>
+        <p>Your free TV mount offer is locked in. A HouseAccount concierge will call within 24 hours to schedule your installation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logos">
+    <span class="footer-partner-text" id="footer-partner" style="display:none"></span>
+    <span class="footer-x" id="footer-x" style="display:none">×</span>
+    <img src="https://cdn.prod.website-files.com/67c69ed7dd5666816747acc4/691e951396c94a7fdce7018b_HouseAccount%20Logoo.svg" alt="HouseAccount">
+  </div>
+  <p>The home services platform for new homeowners</p>
+  <div style="margin-top:8px;">
+    <a href="https://www.houseaccount.com/terms-of-service">Terms</a>
+    <a href="https://www.houseaccount.com/privacy-policy">Privacy</a>
+    <a href="https://www.houseaccount.com/">houseaccount.com</a>
+  </div>
+  <p style="margin-top:10px;">©2026 HouseAccount. All rights reserved.</p>
+</footer>
+
+<!-- Netlify Forms detection -->
+<form name="closer-lead" data-netlify="true" hidden>
+  <input name="form-name"> <input name="first-name"> <input name="last-name">
+  <input name="email"> <input name="phone"> <input name="street">
+  <input name="city"> <input name="state"> <input name="zip">
+  <input name="interest"> <input name="partner">
+</form>
+
+<script>
+// ── PARTNER CONFIG ──
+var PARTNERS = {
+  'republictitle':  { name: 'Republic Title' },
+  'chicagotitle':   { name: 'Chicago Title' },
+  'firstamerican':  { name: 'First American Title' },
+  'stewartitle':    { name: 'Stewart Title' },
+  'fidelity':       { name: 'Fidelity National Title' },
+  'orlandotitle':   { name: 'Orlando Title' },
+  'sunbeltitle':    { name: 'Sunbelt Title' },
+  'floridatitle':   { name: 'Florida Title & Trust' },
+  'demo':           { name: 'Your Title Company' },
+};
+
+var pathParts = window.location.pathname.split('/').filter(Boolean);
+var slug = pathParts[pathParts.length - 1] || '';
+var partner = PARTNERS[slug] || null;
+
+if (partner) {
+  document.getElementById('nav-partner').textContent = partner.name;
+  document.getElementById('nav-partner').style.display = '';
+  document.getElementById('nav-x').style.display = '';
+  document.getElementById('hero-eyebrow').textContent = 'Compliments of ' + partner.name + ' & HouseAccount';
+  document.getElementById('footer-partner').textContent = partner.name;
+  document.getElementById('footer-partner').style.display = '';
+  document.getElementById('footer-x').style.display = '';
+  document.title = 'Move-In Hub | ' + partner.name + ' × HouseAccount';
+}
+
+document.getElementById('form-partner').value = slug || 'direct';
+
+// ── PROGRESS TRACKING (localStorage) ──
+var TOTAL_TASKS = 10; // 1 USPS + 9 checklist
+var PFXU = 'ha_closer_usps';
+var PFX  = 'ha_closer_task_';
+
+function countDone() {
+  var n = localStorage.getItem(PFXU) === '1' ? 1 : 0;
+  for (var i = 0; i < 9; i++) {
+    if (localStorage.getItem(PFX + i) === '1') n++;
+  }
+  return n;
+}
+
+function updateProgress() {
+  var done = countDone();
+  var pct  = Math.round((done / TOTAL_TASKS) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-count').textContent = done + ' of ' + TOTAL_TASKS + ' done';
+  document.getElementById('progress-label').textContent =
+    done === TOTAL_TASKS ? '🎉 All done!' :
+    done === 0 ? 'Your move-in checklist' : 'Checklist (' + pct + '% done)';
+}
+
+// ── MAIL DONE TOGGLE ──
+function toggleMailDone() {
+  var isDone = localStorage.getItem(PFXU) === '1';
+  localStorage.setItem(PFXU, isDone ? '0' : '1');
+  var btn = document.getElementById('mail-done-btn');
+  if (!isDone) {
+    btn.textContent = '✓ Done';
+    btn.classList.add('marked');
+  } else {
+    btn.textContent = 'Mark as done';
+    btn.classList.remove('marked');
+  }
+  updateProgress();
+}
+
+// Init mail done state
+if (localStorage.getItem(PFXU) === '1') {
+  var mailBtn = document.getElementById('mail-done-btn');
+  mailBtn.textContent = '✓ Done';
+  mailBtn.classList.add('marked');
+}
+
+// ── CHECKLIST CARDS ──
+document.querySelectorAll('.check-card').forEach(function(card) {
+  var idx = card.dataset.idx;
+  if (localStorage.getItem(PFX + idx) === '1') card.classList.add('done');
+
+  card.addEventListener('click', function(e) {
+    if (e.target.closest('a')) return;
+    var isDone = card.classList.toggle('done');
+    localStorage.setItem(PFX + idx, isDone ? '1' : '0');
+    updateProgress();
+  });
+});
+
+updateProgress();
+
+// ── UTILITY CITY INPUT ──
+var utilityTypes = [
+  { id: 'search-electric', type: 'electric utility' },
+  { id: 'search-gas',      type: 'natural gas utility' },
+  { id: 'search-internet', type: 'internet providers' },
+  { id: 'search-water',    type: 'water utility' },
+  { id: 'search-trash',    type: 'trash pickup service' },
+];
+
+document.getElementById('utility-city').addEventListener('input', function() {
+  var city = this.value.trim();
+  utilityTypes.forEach(function(u) {
+    var q = city ? u.type + ' ' + city : u.type + ' near me';
+    document.getElementById(u.id).href = 'https://www.google.com/search?q=' + encodeURIComponent(q);
+  });
+});
+
+// ── INTEREST CHIPS ──
+document.querySelectorAll('.chip').forEach(function(chip) {
+  chip.addEventListener('click', function(e) {
+    e.preventDefault();
+    chip.classList.toggle('on');
+    chip.querySelector('input').checked = chip.classList.contains('on');
+  });
+});
+
+// ── FORM SUBMIT ──
+function handleFormSubmit() {
+  var required = [
+    { id: 'form-first', name: 'first-name' },
+    { id: 'form-last',  name: 'last-name' },
+    { id: 'form-email', name: 'email' },
+    { id: 'form-phone', name: 'phone' },
+    { id: 'form-street', name: 'street' },
+    { id: 'form-city',  name: 'city' },
+    { id: 'form-state', name: 'state' },
+    { id: 'form-zip',   name: 'zip' },
+  ];
+
+  var valid = true;
+  required.forEach(function(f) {
+    var el = document.getElementById(f.id);
+    if (!el.value.trim()) {
+      el.classList.add('error');
+      el.addEventListener('input', function() { el.classList.remove('error'); }, { once: true });
+      valid = false;
+    }
+  });
+
+  if (!valid) {
+    document.querySelector('#claim-form .error').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  var btn = document.getElementById('form-submit-btn');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  var interests = [];
+  document.querySelectorAll('.chip.on').forEach(function(c) { interests.push(c.dataset.label); });
+
+  var params = new URLSearchParams({
+    'form-name':  'closer-lead',
+    'first-name': document.getElementById('form-first').value,
+    'last-name':  document.getElementById('form-last').value,
+    'email':      document.getElementById('form-email').value,
+    'phone':      document.getElementById('form-phone').value,
+    'street':     document.getElementById('form-street').value,
+    'city':       document.getElementById('form-city').value,
+    'state':      document.getElementById('form-state').value,
+    'zip':        document.getElementById('form-zip').value,
+    'interest':   interests.join(', '),
+    'partner':    document.getElementById('form-partner').value,
+  });
+
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
+  })
+  .then(function() { showSuccess(); })
+  .catch(function() { showSuccess(); });
+}
+
+function showSuccess() {
+  document.getElementById('form-content').style.display = 'none';
+  document.getElementById('form-success').style.display = 'block';
+  window.scrollTo({ top: document.getElementById('claim').offsetTop - 20, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

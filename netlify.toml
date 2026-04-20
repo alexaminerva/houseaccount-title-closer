@@ -1,0 +1,9 @@
+[build]
+  publish = "."
+
+# Route any path to index.html so partner slugs work
+# e.g. /republictitle, /chicagotitle, /demo
+[[redirects]]
+  from = "/*"
+  to   = "/index.html"
+  status = 200
