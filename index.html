@@ -238,30 +238,35 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--cre
     <button class="modal-close" id="modal-close-btn" onclick="closeModal()">×</button>
     <div class="modal-hd">
       <h2>Tell us about your move</h2>
-      <p>Answer three quick questions to get your personalized checklist and local utility providers.</p>
+      <p>Answer a few quick questions to get your personalized checklist and local utility providers.</p>
     </div>
 
     <div class="intake-q">
-      <div class="intake-q-label">Are you moving within Florida, or coming from another state?</div>
+      <div class="intake-q-label">What state are you moving to?</div>
+      <input type="text" id="intake-state" class="intake-zip" style="width:100%;max-width:260px" placeholder="e.g. Florida or FL" maxlength="30" autocomplete="off">
+    </div>
+
+    <div class="intake-q">
+      <div class="intake-q-label" id="q-origin-label">Are you moving from the same state, or from another state?</div>
       <div class="pill-group" id="q-move">
-        <button class="pill" data-val="same">Within Florida</button>
-        <button class="pill" data-val="new">From another state</button>
+        <button class="pill on" data-val="same" type="button">Same state</button>
+        <button class="pill" data-val="new" type="button">Different state</button>
       </div>
     </div>
 
     <div class="intake-q">
       <div class="intake-q-label">Do you own or lease a vehicle?</div>
       <div class="pill-group" id="q-car">
-        <button class="pill" data-val="yes">Yes</button>
-        <button class="pill" data-val="no">No</button>
+        <button class="pill on" data-val="yes" type="button">Yes</button>
+        <button class="pill" data-val="no" type="button">No vehicle</button>
       </div>
     </div>
 
     <div class="intake-q">
       <div class="intake-q-label">Do you receive Social Security benefits?</div>
       <div class="pill-group" id="q-ssa">
-        <button class="pill" data-val="yes">Yes</button>
-        <button class="pill" data-val="no">No</button>
+        <button class="pill" data-val="yes" type="button">Yes</button>
+        <button class="pill on" data-val="no" type="button">No</button>
       </div>
     </div>
 
@@ -271,10 +276,10 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--cre
     </div>
 
     <div class="intake-cta">
-      <button class="btn-navy-lg" id="intake-btn" onclick="buildList()">Build my checklist →</button>
+      <button class="btn-navy-lg" id="intake-btn" onclick="buildList()" type="button">Build my checklist →</button>
       <span class="intake-hint">Takes 10 seconds.</span>
     </div>
-    <div class="intake-error" id="intake-error">Please answer all three questions above.</div>
+    <div class="intake-error" id="intake-error">Please answer all questions above.</div>
   </div>
 </div>
 
@@ -711,25 +716,37 @@ function closeModal() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Show sections immediately with a sensible default (same-state, has car, no SSA)
+  // Show sections immediately with sensible defaults (same-state, has car, no SSA)
   currentTasks = getTasksForProfile('same', true, false);
   renderChecklist(currentTasks);
-  renderUtilities('');
+  renderUtilities('', '');
   document.getElementById('results-wrap').style.display = '';
 
   setTimeout(openModal, 180);
 });
 
 // ─────────────────────────────────────────────
-// PILL TOGGLE LOGIC
+// PILL TOGGLE — event delegation, always works
 // ─────────────────────────────────────────────
-document.querySelectorAll('.pill-group').forEach(function(group) {
-  group.querySelectorAll('.pill').forEach(function(pill) {
-    pill.addEventListener('click', function() {
-      group.querySelectorAll('.pill').forEach(function(p) { p.classList.remove('on'); });
-      pill.classList.add('on');
-    });
-  });
+document.addEventListener('click', function(e) {
+  var pill = e.target.closest('.pill');
+  if (!pill) return;
+  var group = pill.closest('.pill-group');
+  if (!group) return;
+  group.querySelectorAll('.pill').forEach(function(p) { p.classList.remove('on'); });
+  pill.classList.add('on');
+});
+
+// State input → update Q2 label dynamically
+document.addEventListener('input', function(e) {
+  if (e.target.id !== 'intake-state') return;
+  var state = e.target.value.trim();
+  var label = document.getElementById('q-origin-label');
+  if (state) {
+    label.textContent = 'Are you moving from ' + state + ', or from a different state?';
+  } else {
+    label.textContent = 'Are you moving from the same state, or from another state?';
+  }
 });
 
 function getPillVal(groupId) {
@@ -743,17 +760,11 @@ function getPillVal(groupId) {
 var currentTasks = [];
 
 function buildList() {
-  var moveType = getPillVal('q-move');
-  var carVal   = getPillVal('q-car');
-  var ssaVal   = getPillVal('q-ssa');
+  var stateVal = document.getElementById('intake-state').value.trim();
+  var moveType = getPillVal('q-move') || 'same';
+  var carVal   = getPillVal('q-car')  || 'yes';
+  var ssaVal   = getPillVal('q-ssa')  || 'no';
   var zip      = document.getElementById('intake-zip').value.trim();
-
-  if (!moveType || !carVal || !ssaVal) {
-    var err = document.getElementById('intake-error');
-    err.style.display = '';
-    setTimeout(function() { err.style.display = 'none'; }, 4000);
-    return;
-  }
 
   document.getElementById('intake-error').style.display = 'none';
 
@@ -762,13 +773,14 @@ function buildList() {
 
   currentTasks = getTasksForProfile(moveType, hasCar, hasSSA);
   renderChecklist(currentTasks);
-  renderUtilities(zip);
+  renderUtilities(zip, stateVal);
 
   document.getElementById('results-wrap').style.display = '';
   document.getElementById('intake-btn').textContent = 'Update my list ↺';
 
   // Show edit bar with summary
-  var moveLbl  = moveType === 'new' ? 'Moving from out of state' : 'Moving within FL';
+  var stateLbl = stateVal || 'FL';
+  var moveLbl  = moveType === 'new' ? 'From another state → ' + stateLbl : 'Within ' + stateLbl;
   var carLbl   = hasCar ? 'has a vehicle' : 'no vehicle';
   var ssaLbl   = hasSSA ? 'receives SSA' : '';
   var summary  = [moveLbl, carLbl, ssaLbl].filter(Boolean).join(' · ');
@@ -776,7 +788,6 @@ function buildList() {
   document.getElementById('edit-bar-summary').innerHTML = '<strong>' + currentTasks.length + ' tasks</strong> · ' + summary;
   document.getElementById('edit-bar').style.display = '';
 
-  // Enable modal close button for future reopens
   document.getElementById('modal-close-btn').classList.add('visible');
 
   closeModal();
@@ -867,10 +878,41 @@ var UTILITY_CATS = [
   { key: 'internet', emoji: '📶', label: 'Internet & Cable',  search: 'internet providers' },
 ];
 
-function renderUtilities(zip) {
-  var region = lookupRegion(zip);
+function renderUtilities(zip, stateVal) {
   var container = document.getElementById('utilities-container');
   container.innerHTML = '';
+
+  // If state is specified and clearly not FL, skip the FL lookup and show generic search
+  var stateNorm = (stateVal || '').trim().toUpperCase().replace(/[^A-Z]/g, '');
+  var isFL = !stateNorm || stateNorm === 'FL' || stateNorm === 'FLORIDA';
+
+  if (!isFL) {
+    var genericMsg = document.createElement('p');
+    genericMsg.className = 'region-note';
+    genericMsg.style.marginBottom = '20px';
+    genericMsg.textContent = 'Enter your zip code below and use the search links to find your local utility providers in ' + (stateVal || 'your new state') + '.';
+    container.appendChild(genericMsg);
+    // Still show categories with Google search links
+    var region = { electric: [], gas: [], water: [], trash: [], internet: [] };
+    var grid = document.createElement('div');
+    grid.className = 'utility-grid';
+    var arrowSvg = '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+    var searchSvg = '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+    UTILITY_CATS.forEach(function(cat) {
+      var q = cat.search + (zip ? ' ' + zip : ' ' + (stateVal || 'near me'));
+      var searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(q);
+      var card = document.createElement('div');
+      card.className = 'utility-card';
+      card.innerHTML =
+        '<div class="utility-header"><span class="utility-emoji">' + cat.emoji + '</span><h4>' + cat.label + '</h4></div>' +
+        '<a class="local-search-btn" href="' + searchUrl + '" target="_blank" rel="noopener">' + searchSvg + ' Search ' + cat.label.toLowerCase() + ' near you</a>';
+      grid.appendChild(card);
+    });
+    container.appendChild(grid);
+    return;
+  }
+
+  var region = lookupRegion(zip);
 
   if (region.name) {
     var badge = document.createElement('div');
@@ -881,7 +923,9 @@ function renderUtilities(zip) {
     var fallback = document.createElement('p');
     fallback.className = 'region-note';
     fallback.style.marginBottom = '20px';
-    fallback.textContent = "We didn't recognize that zip code — here are the major Florida providers. Use the search links to find your local authority.";
+    fallback.textContent = zip
+      ? "We didn't recognize that zip — here are the major Florida providers. Use the search links to find your local authority."
+      : "Enter your zip code for a precise match — or browse the major Florida providers below.";
     container.appendChild(fallback);
   }
 
