@@ -173,6 +173,24 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--cre
 .footer a { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 12px; margin: 0 8px; }
 .footer a:hover { color: rgba(255,255,255,0.6); }
 
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(10,25,35,0.72); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.25s ease; pointer-events: none; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box { background: var(--white); border-radius: 20px; padding: 36px 40px; width: 100%; max-width: 520px; max-height: calc(100vh - 40px); overflow-y: auto; transform: translateY(18px); transition: transform 0.28s cubic-bezier(0.34,1.2,0.64,1); position: relative; }
+.modal-overlay.open .modal-box { transform: translateY(0); }
+.modal-hd { margin-bottom: 24px; }
+.modal-hd h2 { font-size: 21px; font-weight: 700; color: var(--navy); letter-spacing: -0.02em; margin-bottom: 5px; }
+.modal-hd p { font-size: 14px; color: var(--muted); line-height: 1.55; }
+.modal-close { position: absolute; top: 14px; right: 14px; background: var(--cream); border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 17px; color: var(--muted); cursor: pointer; display: none; align-items: center; justify-content: center; transition: background 0.15s; }
+.modal-close:hover { background: var(--border); color: var(--navy); }
+.modal-close.visible { display: flex; }
+.edit-bar { background: var(--white); border-bottom: 1px solid var(--border); padding: 10px 24px; display: none; }
+.edit-bar-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.edit-bar-summary { font-size: 13px; color: var(--muted); }
+.edit-bar-summary strong { color: var(--navy); }
+.edit-bar-btn { background: none; border: 1px solid var(--border); border-radius: 7px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: var(--navy); cursor: pointer; font-family: inherit; transition: background 0.1s; }
+.edit-bar-btn:hover { background: var(--cream); }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
   .nav { padding: 14px 20px; }
@@ -206,51 +224,59 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--cre
   <p class="hero-sub">Answer three quick questions and we'll build your custom checklist — right address updates, in the right order, with your local utilities auto-filled.</p>
 </section>
 
-<!-- INTAKE -->
-<section class="section section-white" id="intake">
-  <div class="section-inner">
-    <div class="eyebrow">Step 1 of 1</div>
-    <h2 class="section-title">Tell us about your move</h2>
-    <p class="section-sub">Your answers filter and prioritize the list — so you only see what actually applies to you.</p>
-
-    <div class="intake-card">
-      <div class="intake-q">
-        <div class="intake-q-label">Are you moving within Florida, or coming from another state?</div>
-        <div class="pill-group" id="q-move">
-          <button class="pill" data-val="same">Within Florida</button>
-          <button class="pill" data-val="new">From another state</button>
-        </div>
-      </div>
-
-      <div class="intake-q">
-        <div class="intake-q-label">Do you own or lease a vehicle?</div>
-        <div class="pill-group" id="q-car">
-          <button class="pill" data-val="yes">Yes</button>
-          <button class="pill" data-val="no">No</button>
-        </div>
-      </div>
-
-      <div class="intake-q">
-        <div class="intake-q-label">Do you receive Social Security benefits?</div>
-        <div class="pill-group" id="q-ssa">
-          <button class="pill" data-val="yes">Yes</button>
-          <button class="pill" data-val="no">No</button>
-        </div>
-      </div>
-
-      <div class="intake-q" style="margin-bottom:0">
-        <div class="intake-q-label">Your new zip code <span>— used to look up your local utility providers</span></div>
-        <input type="text" id="intake-zip" class="intake-zip" placeholder="e.g. 33101" maxlength="5" inputmode="numeric">
-      </div>
-
-      <div class="intake-cta">
-        <button class="btn-navy-lg" id="intake-btn" onclick="buildList()">Build my checklist →</button>
-        <span class="intake-hint">Takes 10 seconds. Your progress saves automatically.</span>
-      </div>
-      <div class="intake-error" id="intake-error">Please answer all three questions above.</div>
-    </div>
+<!-- EDIT BAR (shown after first submission) -->
+<div class="edit-bar" id="edit-bar">
+  <div class="edit-bar-inner">
+    <span class="edit-bar-summary" id="edit-bar-summary"></span>
+    <button class="edit-bar-btn" onclick="openModal()">✏️ Edit my answers</button>
   </div>
-</section>
+</div>
+
+<!-- INTAKE MODAL -->
+<div class="modal-overlay" id="intake-modal">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close-btn" onclick="closeModal()">×</button>
+    <div class="modal-hd">
+      <h2>Tell us about your move</h2>
+      <p>Answer three quick questions to get your personalized checklist and local utility providers.</p>
+    </div>
+
+    <div class="intake-q">
+      <div class="intake-q-label">Are you moving within Florida, or coming from another state?</div>
+      <div class="pill-group" id="q-move">
+        <button class="pill" data-val="same">Within Florida</button>
+        <button class="pill" data-val="new">From another state</button>
+      </div>
+    </div>
+
+    <div class="intake-q">
+      <div class="intake-q-label">Do you own or lease a vehicle?</div>
+      <div class="pill-group" id="q-car">
+        <button class="pill" data-val="yes">Yes</button>
+        <button class="pill" data-val="no">No</button>
+      </div>
+    </div>
+
+    <div class="intake-q">
+      <div class="intake-q-label">Do you receive Social Security benefits?</div>
+      <div class="pill-group" id="q-ssa">
+        <button class="pill" data-val="yes">Yes</button>
+        <button class="pill" data-val="no">No</button>
+      </div>
+    </div>
+
+    <div class="intake-q" style="margin-bottom:0">
+      <div class="intake-q-label">Your new zip code <span>— for utility provider lookup</span></div>
+      <input type="text" id="intake-zip" class="intake-zip" placeholder="e.g. 33101" maxlength="5" inputmode="numeric">
+    </div>
+
+    <div class="intake-cta">
+      <button class="btn-navy-lg" id="intake-btn" onclick="buildList()">Build my checklist →</button>
+      <span class="intake-hint">Takes 10 seconds.</span>
+    </div>
+    <div class="intake-error" id="intake-error">Please answer all three questions above.</div>
+  </div>
+</div>
 
 <!-- RESULTS (hidden until intake submitted) -->
 <div class="results-wrap" id="results-wrap">
@@ -673,6 +699,22 @@ function lookupRegion(zip) {
 }
 
 // ─────────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────────
+function openModal() {
+  document.getElementById('intake-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('intake-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(openModal, 180);
+});
+
+// ─────────────────────────────────────────────
 // PILL TOGGLE LOGIC
 // ─────────────────────────────────────────────
 document.querySelectorAll('.pill-group').forEach(function(group) {
@@ -716,13 +758,26 @@ function buildList() {
   renderChecklist(currentTasks);
   renderUtilities(zip);
 
-  var wrap = document.getElementById('results-wrap');
-  wrap.style.display = '';
+  document.getElementById('results-wrap').style.display = '';
   document.getElementById('intake-btn').textContent = 'Update my list ↺';
+
+  // Show edit bar with summary
+  var moveLbl  = moveType === 'new' ? 'Moving from out of state' : 'Moving within FL';
+  var carLbl   = hasCar ? 'has a vehicle' : 'no vehicle';
+  var ssaLbl   = hasSSA ? 'receives SSA' : '';
+  var summary  = [moveLbl, carLbl, ssaLbl].filter(Boolean).join(' · ');
+  if (zip) summary += ' · zip ' + zip;
+  document.getElementById('edit-bar-summary').innerHTML = '<strong>' + currentTasks.length + ' tasks</strong> · ' + summary;
+  document.getElementById('edit-bar').style.display = '';
+
+  // Enable modal close button for future reopens
+  document.getElementById('modal-close-btn').classList.add('visible');
+
+  closeModal();
 
   setTimeout(function() {
     document.getElementById('checklist-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 80);
+  }, 280);
 }
 
 // ─────────────────────────────────────────────
