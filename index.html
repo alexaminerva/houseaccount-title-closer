@@ -711,6 +711,12 @@ function closeModal() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Show sections immediately with a sensible default (same-state, has car, no SSA)
+  currentTasks = getTasksForProfile('same', true, false);
+  renderChecklist(currentTasks);
+  renderUtilities('');
+  document.getElementById('results-wrap').style.display = '';
+
   setTimeout(openModal, 180);
 });
 
